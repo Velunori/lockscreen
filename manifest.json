@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "id": "velunori.lockscreen",
+  "name": "Velunori Lock Screen",
+  "version": "0.1.0",
+  "author": "Velunori",
+  "description": "Serene lock screen with a centered clock and password field, using Omarchy's unchanged session lock and PAM service.",
+  "omarchy": {"clonedFrom": "omarchy.lock", "capabilities": ["authentication"]},
+  "kinds": ["service"],
+  "keepLoaded": true,
+  "entryPoints": {"service": "Service.qml"}
+}
