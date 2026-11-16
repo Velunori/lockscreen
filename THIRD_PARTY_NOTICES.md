@@ -1,6 +1,8 @@
 # Omarchy
 
-`Service.qml` is an unmodified copy of Omarchy 4.0.6-1
+`FingerprintModel.js` is also copied unchanged from that installed lock plugin.
+
+`Service.qml` is an unmodified copy of Omarchy 4.5.0-3
 `shell/plugins/lock/Service.qml`. Its PAM flows, fingerprint handling,
 WlSessionLock surfaces, multi-monitor behavior, failsafes and stable `lock` IPC
 remain owned by Omarchy. Checks refuse service drift after an upstream update.

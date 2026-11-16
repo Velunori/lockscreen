@@ -5,13 +5,15 @@ import QtQuick.Effects
 import Quickshell
 import Quickshell.Io
 import qs.Commons
-import "../velunori.core/kit" as V
+import "../lib/kit" as V
 
 // Presentation only. Keep the LockView interface expected by Omarchy's
 // unmodified Service.qml: PAM, secure surfaces and unlocking stay there.
 Item {
     id: root
     property string backgroundPath: ""
+    property string videoPosterPath: ""
+    property bool fingerprintUnavailable: false
     property int backgroundVersion: 0
     property bool fingerprintConfigured: false
     property bool authenticatingPassword: false
@@ -67,7 +69,7 @@ Item {
     TextMetrics { id: dotMetrics; font.family: theme.fontFamily; font.pixelSize: root.passwordDotFontSize; font.letterSpacing: root.passwordDotLetterSpacing; text: "●".repeat(passwordInput.text.length) }
 
     Rectangle { anchors.fill: parent; color: theme.background }
-    Image { id: wallpaper; anchors.fill: parent; source: root.loadBackground ? root.fileUrl(root.backgroundPath) : ""; fillMode: Image.PreserveAspectCrop; asynchronous: true; cache: false; sourceSize.width: width; sourceSize.height: height }
+    Image { id: wallpaper; anchors.fill: parent; source: root.loadBackground ? root.fileUrl(root.videoPosterPath || root.backgroundPath) : ""; fillMode: Image.PreserveAspectCrop; asynchronous: true; cache: false; sourceSize.width: width; sourceSize.height: height }
     MultiEffect { anchors.fill: wallpaper; source: wallpaper; autoPaddingEnabled: false; blurEnabled: root.loadBackground && wallpaper.status === Image.Ready; blur: 1; blurMax: 128; blurMultiplier: 1.25; contrast: -.08 }
     Rectangle { anchors.fill: parent; color: "#66202026" }
     MouseArea { anchors.fill: parent; hoverEnabled: true; onClicked: { root.wakeRequested(); root.forcePasswordFocus(); } onPositionChanged: root.wakeRequested() }
@@ -138,12 +140,26 @@ Item {
             AbstractButton {
                 id: submit; objectName: "lockSubmit"
                 width: root.compact ? 30 : 34; height: width
+                padding: 0
                 anchors.right: parent.right; anchors.rightMargin: 9; anchors.verticalCenter: parent.verticalCenter
                 enabled: root.inputEnabled && !root.authenticatingPassword && root.passwordText.length > 0
                 Accessible.name: "Unlock session"
                 onClicked: { root.wakeRequested(); root.submitEnteredPassword(); }
                 background: Rectangle { radius: width / 2; color: theme.accent; opacity: submit.enabled ? 1 : .5 }
-                contentItem: Text { text: "→"; color: theme.background; font.family: theme.fontFamily; font.pixelSize: 23; horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter }
+                contentItem: Item {
+                    Canvas {
+                        objectName: "lockSubmitArrow"
+                        anchors.centerIn: parent; width: 16; height: 16
+                        property color ink: theme.background
+                        onInkChanged: requestPaint()
+                        onPaint: {
+                            var c = getContext("2d"); c.reset(); c.strokeStyle = ink;
+                            c.lineWidth = 1.6; c.lineCap = "round"; c.lineJoin = "round";
+                            c.beginPath(); c.moveTo(3, 8); c.lineTo(13, 8);
+                            c.moveTo(8, 3); c.lineTo(13, 8); c.lineTo(8, 13); c.stroke();
+                        }
+                    }
+                }
             }
         }
         Text {

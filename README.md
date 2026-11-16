@@ -6,6 +6,8 @@
 
 ## Features
 
+- A geometrically centered unlock arrow and the unchanged Omarchy 4.5 authentication service; video backgrounds use the host-generated poster in the Serene presentation.
+
 - A centered clock and localized date, account name, subtle user icon and compact password field.
 - Your current Omarchy wallpaper with blur and dimming; the accent follows Velunori Appearance.
 - Password entry with Enter or the arrow button, immediate masking, Escape / Ctrl+U to clear, and readable failure feedback. Long masked values shrink to fit.
@@ -14,14 +16,16 @@
 
 ## Requirements
 
-[Velunori core](https://github.com/velunori/core) 0.4.1 or later, installed next to this plugin. The original Omarchy lock plugin and PAM setup must be present. Developed against **Omarchy 4.0.6-1**; the bundled `Service.qml` must match the installed Omarchy service.
+[Velunori Library](https://github.com/Velunori/lib) API 1 (version 1.x), installed in the real sibling `lib/` directory. Works with the stock Omarchy bar; Floating Bars is optional. Developed against **Omarchy 4.0.6-1**.
 
 ## Install
+
+Install the shared library first, then run from this repository directory:
 
 Run from an unlocked desktop terminal:
 
 ```bash
-bash ~/dev/Velunori/lockscreen/scripts/install-local.sh
+bash scripts/install-local.sh
 ```
 
 The installer checks the unchanged service and PAM file, backs up `shell.json`, links the checkout, enables the `omarchy.lock` clone, restarts the shell and checks that the service has PAM configured. A verification failure restores the backup. It does not lock the desktop.
@@ -55,7 +59,7 @@ Render a preview:
 VELUNORI_PREVIEW_PATH=/tmp/lockscreen.png bash scripts/check.sh
 ```
 
-`VELUNORI_PREVIEW_BACKGROUND=/absolute/path/to/image.png` supplies a wallpaper for a rendered preview. Compose repository artwork with `core/scripts/compose-preview.sh`.
+`VELUNORI_PREVIEW_BACKGROUND=/absolute/path/to/image.png` supplies a wallpaper for a rendered preview. Compose repository artwork with `lib/scripts/compose-preview.sh`.
 
 ## Limits
 
@@ -67,7 +71,7 @@ Velunori is a set of independent plugins for the [Omarchy](https://omarchy.org) 
 
 | Plugin | What it is |
 | --- | --- |
-| [core](https://github.com/velunori/core) | The Island and Orbit bars, the appearance settings and the shared design kit |
+| [bar](https://github.com/Velunori/bar) | The Island and Orbit bars, the appearance settings and the shared design kit |
 | [clock](https://github.com/velunori/clock) | Clock in the bar with a month calendar |
 | [control-center](https://github.com/velunori/control-center) | Sound, displays, network, capture and reminders in one panel |
 | [notifications](https://github.com/velunori/notifications) | Notification cards and a session history |

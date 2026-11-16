@@ -40,6 +40,9 @@ ShellRoot {
             var input = find(view, "lockPassword");
             var submit = find(view, "lockSubmit");
             var field = find(view, "lockField");
+            var arrow = find(view, "lockSubmitArrow");
+            var arrowPoint = arrow.mapToItem(submit, arrow.width / 2, arrow.height / 2);
+            check(Math.abs(arrowPoint.x - submit.width / 2) < 0.1 && Math.abs(arrowPoint.y - submit.height / 2) < 0.1, "submit arrow is geometrically centered");
             check(find(view, "lockClock").text === "09:41", "clock uses live-time interface");
             check(!submit.enabled && input.echoMode === TextInput.Password && input.passwordMaskDelay === 0, "empty field disabled and password masked immediately");
             entered = "fixture";

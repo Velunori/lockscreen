@@ -3,7 +3,7 @@ set -euo pipefail
 repo_dir=$(cd "$(dirname "$0")/.." && pwd -P)
 config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/omarchy"
 plugin_dir="$config_dir/plugins/velunori.lockscreen"
-core_dir="$config_dir/plugins/velunori.core"
+lib_dir="$config_dir/plugins/lib"
 omarchy_dir="${OMARCHY_PATH:-/usr/share/omarchy}"
 for executable in omarchy omarchy-shell python3; do
   command -v "$executable" >/dev/null || { echo "Missing: $executable" >&2; exit 1; }
@@ -12,12 +12,8 @@ cmp "$repo_dir/Service.qml" "$omarchy_dir/shell/plugins/lock/Service.qml" || { e
 [[ -r /etc/pam.d/omarchy-lock-password ]] || { echo 'Omarchy lock PAM configuration is missing.' >&2; exit 1; }
 [[ $(omarchy-shell shell ping) == ok ]] || { echo 'Omarchy shell is not running.' >&2; exit 1; }
 [[ $(omarchy-shell lock isLocked) == false ]] || { echo 'Install from an unlocked desktop session.' >&2; exit 1; }
-python3 - "$core_dir/manifest.json" <<'PY'
-import json,sys
-manifest=json.load(open(sys.argv[1]))
-assert manifest['id']=='velunori.core' and tuple(map(int,manifest['version'].split('.'))) >= (0,4,1), 'Core 0.4.1 or later required'
-PY
-bash "$core_dir/scripts/prepare-dev-layout.sh"
+bash "$lib_dir/scripts/check-install.sh"
+bash "$lib_dir/scripts/check-consumer.sh" "$repo_dir"
 if [[ -e "$plugin_dir" || -L "$plugin_dir" ]]; then
   [[ -L "$plugin_dir" && $(readlink -f "$plugin_dir") == "$repo_dir" ]] || { echo "Refusing to replace $plugin_dir" >&2; exit 1; }
 fi
